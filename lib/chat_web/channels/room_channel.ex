@@ -2,7 +2,7 @@ defmodule ChatWeb.RoomChannel do
   use ChatWeb, :channel
 
   @impl true
-  def join("room:lobby", payload, socket) do
+  def join("chat:lobby", payload, socket) do
     if authorized?(payload) do
       send(self(), :after_join)
       {:ok, socket}
@@ -19,11 +19,11 @@ defmodule ChatWeb.RoomChannel do
   end
 
   # It is also common to receive messages from the client and
-  # broadcast to everyone in the current topic (room:lobby).
+  # broadcast to everyone in the current topic (chat:lobby).
   @impl true
   def handle_in("shout", payload, socket) do
     %Chat.Message{}
-    |> Chat.Message.changeset(payload)
+    |> Chat.Message.changeset(Map.merge(payload, %{"room" => "lobby"}))
     |> Chat.Repo.insert()
 
     broadcast(socket, "shout", payload)

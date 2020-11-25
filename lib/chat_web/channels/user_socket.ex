@@ -2,8 +2,8 @@ defmodule ChatWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  channel "room:lobby", ChatWeb.RoomChannel
-  # channel "room:*", ChatWeb.RoomChannel
+  channel "chat:lobby", ChatWeb.RoomChannel
+  channel "chat:*", ChatWeb.ChatChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After

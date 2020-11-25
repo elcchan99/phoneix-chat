@@ -55,39 +55,41 @@ let socket = new Socket("/socket", { params: { token: window.userToken } });
 socket.connect();
 
 // Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("room:lobby", {});
-let ul = document.getElementById("msg-list");
-let name = document.getElementById("name");
-let msg = document.getElementById("msg");
+if (window.location.pathname === "/") {
+  let channel = socket.channel("chat:lobby", {});
+  let ul = document.getElementById("msg-list");
+  let name = document.getElementById("name");
+  let msg = document.getElementById("msg");
 
-channel.on("shout", (payload) => {
-  console.log(`${payload.name} shouted: ${payload.message}`);
-  let li = document.createElement("li");
-  let name = payload.name || "guest";
-  li.innerHTML = `<b>${name}</b>: ${payload.message}`;
-  ul.appendChild(li);
-});
-
-channel
-  .join()
-  .receive("ok", (resp) => {
-    console.log("Joined successfully", resp);
-  })
-  .receive("error", (resp) => {
-    console.log("Unable to join", resp);
+  channel.on("shout", (payload) => {
+    console.log(`${payload.name} shouted: ${payload.message}`);
+    let li = document.createElement("li");
+    let name = payload.name || "guest";
+    li.innerHTML = `<b>${name}</b>: ${payload.message}`;
+    ul.appendChild(li);
   });
 
-msg.addEventListener("keypress", (event) => {
-  console.log(`key: ${event.key}`);
-  console.log(`code: ${event.code}`);
-  if (event.key == "Enter" && msg.value.length > 0) {
-    console.log("prepare to shout");
-    channel.push("shout", {
-      name: name.value,
-      message: msg.value,
+  channel
+    .join()
+    .receive("ok", (resp) => {
+      console.log("Joined successfully", resp);
+    })
+    .receive("error", (resp) => {
+      console.log("Unable to join", resp);
     });
-    msg.value = "";
-  }
-});
+
+  msg.addEventListener("keypress", (event) => {
+    console.log(`key: ${event.key}`);
+    console.log(`code: ${event.code}`);
+    if (event.key == "Enter" && msg.value.length > 0) {
+      console.log("prepare to shout");
+      channel.push("shout", {
+        name: name.value,
+        message: msg.value,
+      });
+      msg.value = "";
+    }
+  });
+}
 
 export default socket;
