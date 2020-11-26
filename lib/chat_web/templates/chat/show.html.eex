@@ -9,9 +9,16 @@
     <% end %>
     </div>
     <%= form_for @conn, "#", [id: "chat-form"], fn f -> %>
-      <%= text_input f, :username, placeholder: "Your name", id: "user-name" %>
-      <br>
-      <%= textarea f, :message, placeholder: "Your message", id: "user-message" %>
+      <div class="form-group">
+        <div class="center-container user-name">
+          <%= if @user_signed_in? do %> 
+            <%= text_input f, :username, value: @current_user, placeholder: "Your name", id: "user-name", disabled: true %>
+          <% else %>
+            <%= text_input f, :username, placeholder: "Your name", id: "user-name" %>
+          <% end %>
+        </div>
+        <%= textarea f, :message, placeholder: "\nYour message", id: "user-message" %>
+      </div>
       <br>
       <%= submit "Post" %>
     <% end %>

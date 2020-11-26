@@ -7,6 +7,8 @@ defmodule ChatWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug ChatWeb.Plugs.SetCurrentUser
+    plug :put_user_token
   end
 
   pipeline :api do
@@ -17,6 +19,8 @@ defmodule ChatWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    resources "/login", SessionController, only: [:index, :create]
+    delete "/logout", SessionController, :delete
     resources "/chat", ChatController, only: [:show]
   end
 
@@ -38,6 +42,17 @@ defmodule ChatWeb.Router do
     scope "/" do
       pipe_through :browser
       live_dashboard "/dashboard", metrics: ChatWeb.Telemetry
+    end
+  end
+
+  defp put_user_token(conn, _) do
+    if current_user = conn.assigns.current_user do
+      token = Phoenix.Token.sign(conn, "user socket", current_user)
+
+      conn
+      |> assign(:user_token, token)
+    else
+      conn
     end
   end
 end

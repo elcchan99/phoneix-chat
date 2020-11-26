@@ -5,10 +5,17 @@ let Chat = {
     }
     let path = window.location.pathname.split("/");
     let room = path[path.length - 1];
-    let channel = socket.channel(`chat:${room}`, {});
-    channel.join().receive("ok", (resp) => {
-      console.log(`Joined ${room} successfully`, resp);
+    let channel = socket.channel(`chat:${room}`, {
+      token: window.userToken,
     });
+    channel
+      .join()
+      .receive("ok", (resp) => {
+        console.log(`Joined ${room} successfully`, resp);
+      })
+      .receive("error", (resp) => {
+        console.log("Unable to join", resp);
+      });
 
     this.listenForChats(channel);
   },

@@ -74,3 +74,33 @@
 .icon-offline {
   background-color: grey;
 }
+
+.btn-logout {
+  display: inline;
+}
+
+form.form-login .form-group > * {
+  display: inline-block;
+
+  input[type="text"] {
+    width: auto;
+  }
+}
+
+form#chat-form {
+  input[type="text"],
+  .form-group {
+    display: flex;
+  }
+  #user-name:disabled {
+    border-width: 0px;
+    font-size: 20px;
+    padding: 20px;
+  }
+}
+
+.center-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

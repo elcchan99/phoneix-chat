@@ -4,7 +4,7 @@ defmodule ChatWeb.ChatChannel do
 
   @impl true
   def join("chat:" <> _room, payload, socket) do
-    if authorized?(payload) do
+    if authorized?(socket, payload) do
       send(self(), :after_join)
       {:ok, socket}
     else
@@ -51,7 +51,13 @@ defmodule ChatWeb.ChatChannel do
   end
 
   # Add authorization logic here as required.
-  defp authorized?(_payload) do
-    true
+  defp authorized?(socket, %{"token" => token}) do
+    case Phoenix.Token.verify(socket, "user socket", token, max_age: 1_209_600) do
+      {:ok, user} ->
+        !!user
+
+      {:error, _reason} ->
+        false
+    end
   end
 end
