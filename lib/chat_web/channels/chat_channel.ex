@@ -1,14 +1,17 @@
 defmodule ChatWeb.ChatChannel do
   use ChatWeb, :channel
   alias Chat
+  alias ChatWeb.Presence
 
   @impl true
   def join("chat:" <> _room, payload, socket) do
-    if authorized?(socket, payload) do
-      send(self(), :after_join)
-      {:ok, socket}
-    else
-      {:error, %{reason: "unauthorized"}}
+    case authorized?(socket, payload) do
+      {:ok, user} ->
+        send(self(), :after_join)
+        {:ok, socket |> assign(:user_id, user)}
+
+      {:no, _} ->
+        {:error, %{reason: "unauthorized"}}
     end
   end
 
@@ -32,13 +35,12 @@ defmodule ChatWeb.ChatChannel do
     socket.topic |> IO.inspect(label: "names")
     "chat:" <> room = socket.topic
 
-    # Chat.list_messages_by_room(room)
-    # |> Enum.each(fn msg ->
-    #   push(socket, "shout", %{
-    #     name: msg.name,
-    #     message: msg.message
-    #   })
-    # end)
+    {:ok, _} =
+      Presence.track(socket, socket.assigns.user_id, %{
+        online_at: inspect(System.system_time(:second))
+      })
+
+    push(socket, "presence_state", Presence.list(socket))
 
     online_status =
       Chat.list_names_by_room(room)
@@ -54,10 +56,10 @@ defmodule ChatWeb.ChatChannel do
   defp authorized?(socket, %{"token" => token}) do
     case Phoenix.Token.verify(socket, "user socket", token, max_age: 1_209_600) do
       {:ok, user} ->
-        !!user
+        {:ok, user}
 
       {:error, _reason} ->
-        false
+        {:no, nil}
     end
   end
 end

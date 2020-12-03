@@ -1,3 +1,5 @@
+import { Presence } from "phoenix";
+
 let Chat = {
   init(socket) {
     if (!window.location.pathname.startsWith("/chat")) {
@@ -8,6 +10,9 @@ let Chat = {
     let channel = socket.channel(`chat:${room}`, {
       token: window.userToken,
     });
+    let presence = new Presence(channel);
+    this.listenForPresence(presence);
+
     channel
       .join()
       .receive("ok", (resp) => {
@@ -40,11 +45,8 @@ let Chat = {
     chatBox.appendChild(msgBlock);
   },
 
-  refreshOnlineStatus(onlineStatusObj) {
+  constructOnlineStatus(onlineStatusObj) {
     console.log(onlineStatusObj);
-    let onlineStatus = document.querySelector(".online-status .content");
-    onlineStatus.innerHTML = "";
-
     let ul = document.createElement("ul");
     Object.entries(onlineStatusObj).forEach(([name, status], _) => {
       console.log("name", name);
@@ -53,6 +55,14 @@ let Chat = {
       li.innerHTML = `<div class="icon icon-${status}line"></div><span>${name}<span>`;
       ul.appendChild(li);
     });
+    return ul;
+  },
+
+  refreshOnlineStatus(onlineStatusObj) {
+    let onlineStatus = document.querySelector(".online-status .content");
+    onlineStatus.innerHTML = "";
+
+    let ul = this.constructOnlineStatus(onlineStatusObj);
     onlineStatus.append(ul);
   },
 
@@ -73,7 +83,22 @@ let Chat = {
       });
 
     channel.on("shout", this.addChatMessage);
-    channel.on("online-status-update", this.refreshOnlineStatus);
+    // channel.on("online-status-update", this.refreshOnlineStatus);
+  },
+  renderOnlinePresence(presence) {
+    let response = "";
+
+    let onlineStatusObj = {};
+    for (const [name, meta] of Object.entries(presence.state)) {
+      onlineStatusObj[name] = "on";
+    }
+    let ul = this.constructOnlineStatus(onlineStatusObj);
+    let onlineStatus = document.querySelector(".online-status .content");
+    onlineStatus.innerHTML = "";
+    onlineStatus.append(ul);
+  },
+  listenForPresence(presence) {
+    presence.onSync(() => this.renderOnlinePresence(presence));
   },
 };
 export default Chat;
