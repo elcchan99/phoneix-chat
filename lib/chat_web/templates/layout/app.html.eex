@@ -26,8 +26,10 @@
             <%= link "Sign In", to: Routes.session_path(@conn, :index) %>
           <% end %>
         </nav>
-        <img src="<%= Routes.static_path(@conn, "/images/phoenix.png") %>"
-        width="500px" alt="Phoenix Framework Logo" />
+        <a href="<%= Routes.page_path(@conn, :index) %>">
+          <img src="<%= Routes.static_path(@conn, "/images/phoenix.png") %>"
+          width="500px" alt="Phoenix Framework Logo" />
+        </a>
     </section>
     </header>
     <main role="main" class="container">
