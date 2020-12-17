@@ -9,10 +9,16 @@ defmodule ChatWeb.SessionController do
   end
 
   def create(conn, %{"name" => user}) do
+    redirect_to =
+      case last_path = NavigationHistory.last_path(conn) do
+        nil -> Routes.page_path(conn, :index)
+        _ -> last_path
+      end
+
     conn
     |> put_session(:current_user_id, user)
     |> put_flash(:info, "Signed in successfully.")
-    |> redirect(to: Routes.page_path(conn, :index))
+    |> redirect(to: redirect_to)
   end
 
   def delete(conn, _param) do
