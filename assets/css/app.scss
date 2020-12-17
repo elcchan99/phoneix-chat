@@ -1,5 +1,6 @@
 /* This file is for your main application css. */
 @import "./phoenix.css";
+@import "./icons.scss";
 
 /* Alerts and form errors */
 .alert {
@@ -35,12 +36,29 @@
   margin: -1rem 0 2rem;
 }
 
+.room-list ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    // margin: 0;
+    padding: 0;
+    text-align: left;
+    cursor: pointer;
+
+    // &:hover {
+    //   background: grey;
+    // }
+  }
+}
+
 .chat-room {
   // display: grid;
   // flex-wrap: wrap;
   // justify-content: center;
   display: grid;
-  grid-template-columns: 1fr minmax(150px, 25%);
+  grid-template-columns: minmax(150px, 25%) 1fr minmax(150px, 25%);
 
   // .box {
   //   flex: 0 0, 500px;
@@ -57,22 +75,6 @@
     padding: 0;
     text-align: left;
   }
-}
-
-.icon {
-  display: inline-block;
-  height: 12px;
-  width: 12px;
-  border-radius: 6px;
-  margin-right: 10px;
-}
-
-.icon-online {
-  background-color: lightgreen;
-}
-
-.icon-offline {
-  background-color: grey;
 }
 
 .btn-logout {

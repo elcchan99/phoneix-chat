@@ -1,8 +1,16 @@
-<h2>Room: <%= @room%></h2>
-
 <div class="chat-room">
+  <div class="room-list">
+    <h2> Rooms </h2>
+    <ul>
+      <li><div class="icon icon-channel">#</div>dev</li>
+      <li><div class="icon icon-channel">#</div>dev-chatty</li>
+      <li><div class="icon icon-channel">#</div>hk-office</li>
+      <li><div class="icon icon-channel">#</div>hk-offtopic</li>
+    </ul>
+  </div>
 
   <div class="chat-container">
+    <h2>Room: <%= @room%></h2>
     <div id="chat-box" class="box">
     <%= for message <- @messages do %>
         <p><b><%= message.name %>:</b> <%= message.message %></p>
