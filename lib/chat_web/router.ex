@@ -1,15 +1,19 @@
 defmodule ChatWeb.Router do
   use ChatWeb, :router
 
+  import Phoenix.LiveView.Router
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
-    plug :fetch_flash
+    # plug :fetch_flash
+    plug :fetch_live_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug NavigationHistory.Tracker, excluded_paths: ["/login", ~r(/admin.*)], history_size: 5
     plug ChatWeb.Plugs.SetCurrentUser
     plug :put_user_token
+    plug :put_root_layout, {ChatWeb.LayoutView, :root}
   end
 
   pipeline :api do
