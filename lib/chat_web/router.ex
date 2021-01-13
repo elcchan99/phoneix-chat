@@ -27,6 +27,8 @@ defmodule ChatWeb.Router do
     resources "/login", SessionController, only: [:index, :create]
     delete "/logout", SessionController, :delete
     resources "/chat", ChatController, only: [:show]
+
+    live "/clock", ClockLive
   end
 
   # Other scopes may use custom stacks.
