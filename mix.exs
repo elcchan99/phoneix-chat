@@ -41,6 +41,7 @@ defmodule Chat.MixProject do
   defp deps do
     [
       {:phoenix, "~> 1.5.5"},
+      {:phoenix_live_view, "~> 0.15.3"},
       {:phoenix_ecto, "~> 4.1"},
       {:ecto_sql, "~> 3.4"},
       # tracking test coverage
@@ -54,7 +55,8 @@ defmodule Chat.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:navigation_history, "~> 0.3.0"}
+      {:navigation_history, "~> 0.3.0"},
+      {:floki, ">= 0.27.0", only: :test}
     ]
   end
 
