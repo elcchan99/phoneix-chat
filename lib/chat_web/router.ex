@@ -29,6 +29,7 @@ defmodule ChatWeb.Router do
     resources "/chat", ChatController, only: [:show]
 
     live "/clock", ClockLive
+    resources "/livechat", LiveChatController, only: [:show]
   end
 
   # Other scopes may use custom stacks.
