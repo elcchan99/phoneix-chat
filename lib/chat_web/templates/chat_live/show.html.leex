@@ -1,0 +1,39 @@
+<div class="chat-room">
+    <div class="room-list">
+    <h2> Rooms </h2>
+    <ul>
+        <li><div class="icon icon-channel">#</div>dev</li>
+        <li><div class="icon icon-channel">#</div>dev-chatty</li>
+        <li><div class="icon icon-channel">#</div>hk-office</li>
+        <li><div class="icon icon-channel">#</div>hk-offtopic</li>
+    </ul>
+    </div>
+
+    <div class="chat-container">
+        <h2>Room: <%= @room%></h2>
+        <div id="chat-box" class="box">
+        <%= for message <- @messages do %>
+            <p><b><%= message.name %>:</b> <%= message.message %></p>
+        <% end %>
+        </div>
+        <%= f = form_for @changeset, "#", [id: "chat-form", phx_submit: :new_message] %>
+            <div class="form-group">
+                <div class="center-container user-name">
+                    <%= text_input f, :name, value: @current_user, placeholder: "Your name", id: "user-name", disabled: true %>
+                </div>
+                <%= textarea f, :message, placeholder: "\nYour message", id: "user-message" %>
+                <%= hidden_input f, :room, value: @room  %>
+                <%= hidden_input f, :name, value: @current_user  %>
+            </div>
+            <br>
+            <%= submit "Post" %>
+        </form>
+    </div>
+
+
+    <div class="online-status">
+        <h3>Online Status</h3>
+        <div class="content">
+        </div>
+    </div>
+</div>
